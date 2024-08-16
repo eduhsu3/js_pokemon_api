@@ -9,5 +9,32 @@
         <script src="https://cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
         <script src="./js/script.js" defer></script>
     </head>
-    <body></body>
+    <body>
+        <div class="mon_search">
+            <input type="text" id="inputSearch" />
+            <button type="button" class="sch_btn" id="submitBtn">검색</button>
+            <p>타입별 보기, 타입 종류를 버튼으로 나열, , 초기화 및 전체보기</p>
+            <p>로딩중</p>
+            <p>인기몬 가져와서 스와이퍼로 3D 자동회전</p>
+            <p>검정 배경에 시선을 끌수있게, 세련되게</p>
+            <p>처음에는 목록 없음</p>
+            <p>카드형태 검색결과</p>
+            <p>클릭시 모달</p>
+            <p>상세클릭 detail.html 이동해서 상세 내용 출력</p>
+            <p>상세페이지 뒤로가기 앱처럼 표현</p>
+        </div>
+        <div class="list_wrap" id="listWrap"></div>
+        <div class="modal_bg_wrap">
+            <div class="modal_inner">
+                <h2 id="monName">포켓몬 이름</h2>
+                <p id="monNumber">포켓몬 ID번호</p>
+                <img id="monImage" src="" alt="" />
+                <p id="monSummary">포켓몬 Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium temporibus labore quasi quo repellat eligendi tempora veritatis. Blanditiis error rem consequuntur laboriosam ipsum at ea iure, debitis fugit voluptatum illo.</p>
+
+                <p>분류, 키, 무게</p>
+                <p>닫기, 상세보기, 이전, 다음</p>
+                <button class="close_modal" id="closeModal">닫기</button>
+            </div>
+        </div>
+    </body>
 </html>

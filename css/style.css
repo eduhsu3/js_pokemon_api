@@ -17,9 +17,11 @@ body { width: 100%; height: 100%; background-color: #000; font-family: "Noto San
 
 
 
+html,
+body{ width: 100%; height: 100%;} 
 
 html{}
-body{ background-color: #f5f5fa;}
+body{ background-color: #f5f5fa; }
 
 a{color: #333; text-decoration: none;}
 :focus {
@@ -63,3 +65,21 @@ button:hover{
 
 .wrapper{}
 .container{ max-width: 1400px; margin: 0 auto;}
+
+
+.mon_search{ padding: 40px; border: 6px solid #000;}
+
+
+.list_wrap{ display: flex; flex-wrap: wrap; border: 6px solid green; padding: 40px; }
+.list_wrap .item_box{ flex-grow: 1; width: 160px; height: 200px; border: 1px solid #000; overflow: hidden; cursor: pointer;}
+
+
+
+.modal_bg_wrap{display: none;}
+body.fixed{ position: relative; overflow: hidden; }
+body.fixed .modal_bg_wrap{ display: flex; justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); opacity: 1;}
+body.fixed .modal_inner{  width: 600px; height: 400px; background-color: #fff;  border-radius: 14px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);}
+
+@media screen and (max-width: 800px){
+    body.fixed .modal_inner{ width: 90%; }
+}
