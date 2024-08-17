@@ -75,11 +75,25 @@ button:hover{
 
 
 
-.modal_bg_wrap{display: none;}
-body.fixed{ position: relative; overflow: hidden; }
-body.fixed .modal_bg_wrap{ display: flex; justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); opacity: 1;}
-body.fixed .modal_inner{  width: 600px; height: 400px; background-color: #fff;  border-radius: 14px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);}
 
-@media screen and (max-width: 800px){
+.modal_bg_wrap{ display: none; /* display: flex; */ justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); }
+.modal_inner{ position: relative;  width: 800px; height: 600px; background-color: #fff;  border-radius: 14px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.5); padding: 40px;}
+.modal_inner .m_name{ text-align: center;}
+.modal_inner .m_num{ text-align: center;}
+.modal_inner .m_img{ text-align: center;}
+.modal_inner .m_img img{ width: 400px ;}
+.modal_inner .m_summary{ text-align: center;}
+.modal_inner .m_ability{ text-align: center;}
+.modal_inner .m_types{ text-align: center;}
+.modal_inner .m_height{ text-align: center;}
+.modal_inner .m_weight{ text-align: center;}
+.modal_inner .close_modal{ position: absolute; top: 0; right: 0; }
+
+/* fixed */
+body.fixed{ position: relative; overflow: hidden; }
+body.fixed .modal_bg_wrap{ display: flex; }
+
+
+@media screen and (max-width: 840px){
     body.fixed .modal_inner{ width: 90%; }
 }
