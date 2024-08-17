@@ -67,7 +67,7 @@ button:hover{
 .container{ max-width: 1400px; margin: 0 auto;}
 
 
-.mon_search{ padding: 40px; border: 6px solid #000;}
+.mon_search{ padding: 40px; border: 6px solid #000; text-align: center;}
 
 
 .list_wrap{ display: flex; flex-wrap: wrap; border: 6px solid green; padding: 40px; }

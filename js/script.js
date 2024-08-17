@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const data = await response.json();
                 //return data.results;
+                console.log(data.results);
 
+                //기본 포켓몬 정보로 상세정보
                 const mixPokemonData = data.results.map((item, idx) => {
                     return {
                         name: koreanNames[idx],
@@ -67,11 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('body').classList.remove('fixed');
     });
 
-    //=========== 한국명 처리 ================================
+    //=========== 이름 한국어 처리 ================================
     const koreanNames = [];
     const urls = [];
     for (let i = 0; i < limitNum; i++) {
-        let url = `https://pokeapi.co/api/v2/pokemon-species/${i + 1}/`;
+        let url = `https://pokeapi.co/api/v2/pokemon-species/${i + 1}/`; //종 에서 가져오기
         urls.push(url);
     }
 
