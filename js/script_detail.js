@@ -1,20 +1,19 @@
 // 포켓몬 정보를 가져오는 함수
-async function getPokemonData(prmType) {
-    let pokemonBaseListUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
-    if (prmType === 'search') {
-        pokemonBaseListUrl = 'https://pokeapi.co/api/v2/pokemon?limit=380'; //390개부터는 404에러 뜬다.
-    }
+async function getPokemonData() {
+    const baseUrl = 'https://pokeapi.co/api/v2';
+    const pokemonLimit = 150; // 가져올 포켓몬 수
+    /* const pokemonLimit = 275; // 가져올 포켓몬 수 */
 
     try {
-        const response = await fetch(pokemonBaseListUrl);
-        const firstData = await response.json();
+        const response = await fetch(`${baseUrl}/pokemon?limit=${pokemonLimit}`);
+        const data = await response.json();
+        const pokemonList = data.results;
 
-        const pokemonDataPromises = firstData.results.map(async (item) => {
-            const pokemonUrl = item.url;
-            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${item.name}`;
+        const pokemonDataPromises = pokemonList.map(async (item) => {
+            const pokemonDetailResponse = await fetch(item.url);
+            const pokemonDetail = await pokemonDetailResponse.json();
 
-            const [pokemonResponse, speciesResponse] = await Promise.all([fetch(pokemonUrl), fetch(speciesUrl)]);
-            const pokemonDetail = await pokemonResponse.json();
+            const speciesResponse = await fetch(pokemonDetail.species.url);
             const speciesDetail = await speciesResponse.json();
 
             const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
@@ -80,9 +79,9 @@ const eleSchInput = document.querySelector('#inputSearch');
 function onSearchHandler(e) {
     searchKeyword = eleSchInput.value.trim().toLowerCase();
     if (searchKeyword === '') eleSchInput.value = '';
-    //============== 검색 실행시 가져오기 ===============================
+    //============== 검색 실행 ===============================
     document.querySelector('#listWrap').innerHTML = '';
-    getPokemonData('search').then((response) => {
+    getPokemonData().then((response) => {
         const filteredArray = response.filter((item) => {
             return item.name.includes(searchKeyword);
         });
