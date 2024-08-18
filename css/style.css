@@ -71,7 +71,12 @@ button:hover{
 .mon_search{ padding: 40px; border: 6px solid #000; text-align: center;}
 
 
-.list_wrap{ display: flex; flex-wrap: wrap; border: 6px solid green; padding: 40px; }
+
+.mon_main{ position: relative;}
+
+
+
+.list_wrap{ display: flex; flex-wrap: wrap; align-items: flex-start; border: 6px solid green; padding: 40px; min-height: 500px; }
 .list_wrap .item_box{  width: calc((100% - 90px) / 10); margin-right: 10px; margin-bottom: 10px; height: auto; border: 1px solid #000; overflow: hidden; cursor: pointer;}
 .list_wrap .item_box:nth-of-type(10n){ margin-right: 0;}
 
@@ -99,8 +104,8 @@ button:hover{
 
 }
 
-
-.modal_bg_wrap{ display: none; /* display: flex; */ justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); }
+/*  ======================== modal =========================  */
+.modal_bg_wrap{  display: none;/* display: flex; */ justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); }
 .modal_inner{ position: relative;  width: 800px; min-height: 320px;  background-color: #fff;  border-radius: 14px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.5); padding: 40px;}
 .modal_cnt{ position: relative; padding-left: 340px;}
 .modal_inner .m_name{ }
@@ -112,9 +117,11 @@ button:hover{
 .modal_inner .m_types{ }
 .modal_inner .m_height{ }
 .modal_inner .m_weight{ }
-.modal_inner .close_modal{ position: absolute; top: 0; right: 0; }
+/* modal_close */
+.modal_inner .close_modal{ position: absolute; z-index: 200; top: 0; right: 0; }
 
-/* fixed */
+
+/* fixed - modal active */
 body.fixed{ overflow: hidden;}
 body.fixed .modal_bg_wrap{ display: flex; }
 
@@ -124,4 +131,17 @@ body.fixed .modal_bg_wrap{ display: flex; }
     .modal_inner .m_num{ text-align: center;}
     .modal_inner .m_img{  position: static; text-align: center; }
     body.fixed .modal_inner{ width: 90%; }
+}
+
+
+
+
+/*  ======================== loading_spinner =========================  */
+/* loading_spinner */
+.loading_spinner{ display: none; justify-content: center; align-items: center;  position: absolute; z-index: 100; top: 0; left: 0; right: 0; bottom: 0;  }
+.loading_spinner:after{ content: ''; display: block; width: 38px; height: 38px; background-image: url(../images/icon_ball.png); background-repeat: no-repeat; background-position: center center; animation: rotateAni 0.3s ease-in-out infinite;}
+.loading_spinner.on{ display: flex; }
+@keyframes rotateAni{
+    0%{ transform: rotate(0deg);}    
+    100%{ transform: rotate(360deg);}        
 }

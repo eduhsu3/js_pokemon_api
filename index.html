@@ -13,7 +13,12 @@
             <input type="text" id="inputSearch" />
             <button type="button" class="sch_btn" id="submitBtn">검색</button>
         </div>
-        <div class="list_wrap" id="listWrap"></div>
+        <div class="mon_main">
+            <div class="list_wrap" id="listWrap"></div>
+            <!-- loading -->
+            <div class="loading_spinner"></div>
+        </div>
+
         <div class="modal_bg_wrap">
             <div class="modal_inner">
                 <div class="modal_cnt">
@@ -25,9 +30,12 @@
                     <p class="m_types" id="monTypes"></p>
                     <p class="m_height" id="monHeight"></p>
                     <p class="m_weight" id="monWeight"></p>
+                    <button type="button" class="detail_view" id="detailViewBtn">상세보기</button>
                 </div>
                 <!-- <p>닫기, 상세보기, 이전, 다음</p> -->
-                <button class="close_modal" id="closeModal">닫기</button>
+                <button type="button" class="close_modal" id="closeModal">닫기</button>
+                <!-- loading -->
+                <div class="loading_spinner"></div>
             </div>
         </div>
     </body>
