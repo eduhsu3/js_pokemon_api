@@ -1,7 +1,8 @@
 // 포켓몬 정보를 가져오는 함수
 async function getPokemonData() {
     const baseUrl = 'https://pokeapi.co/api/v2';
-    const pokemonLimit = 20; // 가져올 포켓몬 수
+    const pokemonLimit = 150; // 가져올 포켓몬 수
+    /* const pokemonLimit = 275; // 가져올 포켓몬 수 */
 
     try {
         // 11111111111. 기본 포켓몬 리스트 가져오기
@@ -10,7 +11,7 @@ async function getPokemonData() {
         const response = await fetch(`${baseUrl}/pokemon?limit=${pokemonLimit}`);
         const data = await response.json();
         const pokemonList = data.results;
-        //console.log('1번 : ', pokemonList)     // ------------------------------------------------------------통신 결과 -> 포켓몬 20개의 기본 정보를 배열로 보관;
+        //console.log('1번 : ', pokemonList); // ------------------------------------------------------------통신 결과 -> 포켓몬 20개의 기본 정보를 배열로 보관;
 
         // 22222222222. 포켓몬 상세 정보 가져오기
         // 22222222222. 포켓몬 상세 정보 가져오기
@@ -34,12 +35,14 @@ async function getPokemonData() {
             // =========================================== 능력(abilities)의 상세정보 url로 통신 후 한글 능력명과 한글 능력 설명 가져오기
             // =========================================== 능력(abilities)의 상세정보 url로 통신 후 한글 능력명과 한글 능력 설명 가져오기
             const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
+                console.log(pokemonDetail.abilities.length);
                 const abilityResponse = await fetch(abilityInfo.ability.url);
                 const abilityDetail = await abilityResponse.json();
 
                 // 능력 한글제목 과 능력 설명 가져오기
                 const abilityName = abilityDetail.names.find((name) => name.language.name === 'ko').name;
                 const abilityDescription = abilityDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+                console.log('왜왜왜', abilityDetail.names);
 
                 return `${abilityName}: ${abilityDescription}`;
             });
