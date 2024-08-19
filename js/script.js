@@ -1,8 +1,8 @@
 // 포켓몬 정보를 가져오는 함수
 async function getPokemonData(prmType) {
-    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=740&offset=0';
+    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=200&offset=0';
     if (prmType === 'search') {
-        baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=750&offset=200';
+        baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=750&offset=0';
         // baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=380';
 
         /* baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0'; */
@@ -31,8 +31,8 @@ async function getPokemonData(prmType) {
             return {
                 name: koreanName,
                 id: pokemonDetail.id,
-                //image: pokemonDetail.sprites.other['official-artwork'].front_default,
-                image: pokemonDetail.sprites.front_default,
+                image: pokemonDetail.sprites.other['official-artwork'].front_default,
+                //image: pokemonDetail.sprites.front_default,
             };
         });
 
@@ -180,8 +180,8 @@ async function getModalPokemonData(prmId) {
         return {
             name: koreanName,
             id: pokemonDetail.id,
-            //image: pokemonDetail.sprites.other['official-artwork'].front_default,
-            image: pokemonDetail.sprites.front_default,
+            image: pokemonDetail.sprites.other['official-artwork'].front_default,
+            //image: pokemonDetail.sprites.front_default,
             description: koreanDescription,
             abilities: abilities,
             types: types,
