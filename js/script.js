@@ -1,9 +1,8 @@
+let myLocalPokeData = [];
+
 // 포켓몬 정보를 가져오는 함수
-async function getPokemonData(prmType) {
-    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
-    if (prmType === 'search') {
-        baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=380';
-    }
+async function getPokemonData() {
+    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1025';
 
     try {
         const response = await fetch(baseUrl);
@@ -11,18 +10,23 @@ async function getPokemonData(prmType) {
 
         const pokemonDataPromises = firstData.results.map(async (item) => {
             const pokemonUrl = item.url;
-            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${item.name}`;
+            const divide = item.url.split('/');
+            const pokeId = divide[divide.length - 2];
+            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`; //이름이 아닌 id 숫자값으로 요청을 보낼것이다.
 
-            const [pokemonResponse, speciesResponse] = await Promise.all([fetch(pokemonUrl), fetch(speciesUrl)]);
-            const pokemonDetail = await pokemonResponse.json();
+            const speciesResponse = await fetch(speciesUrl);
             const speciesDetail = await speciesResponse.json();
 
-            const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
+            //한국어 포켓몬 이름
+            const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+            //한국어 포켓몬 설명
+            const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko')?.flavor_text || '번역없음';
 
             return {
+                id: pokeId,
                 name: koreanName,
-                id: pokemonDetail.id,
-                image: pokemonDetail.sprites.other['official-artwork'].front_default,
+                koreanDescription: koreanDescription,
+                image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokeId}.png`,
             };
         });
 
@@ -36,8 +40,9 @@ async function getPokemonData(prmType) {
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.mon_main .loading_spinner').classList.add('on');
     getPokemonData().then((response) => {
+        myLocalPokeData = [...response];
         document.querySelector('.mon_main .loading_spinner').classList.remove('on');
-        renderPokemonList(response);
+        renderPokemonList(myLocalPokeData);
     });
 });
 
@@ -46,24 +51,25 @@ function renderPokemonList(prmArrayData) {
     const eleListWrap = document.querySelector('#listWrap');
     prmArrayData.forEach((item, idx) => {
         const eleDiv = document.createElement('div');
-        eleDiv.id = item.id;
+        eleDiv.id = item.id; //id 값 div에 넣어두기
         eleDiv.className = 'item_box';
         eleDiv.innerHTML = `
-            <p>${item.name}</p>
-            <img src="${item.image}" alt="" />`;
+            <p class="m_name">${item.name}</p>
+            <p class="m_id">No.${item.id}</p>
+            <p class="m_img"><img src="${item.image}" alt="" /></p>`;
 
         eleListWrap.appendChild(eleDiv);
 
-        // 클릭시 모달열기
+        // ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 클릭시 모달열기
         eleDiv.addEventListener('click', function (e) {
             document.querySelector('body').classList.add('fixed');
-            document.querySelector('.modal_inner .loading_spinner').classList.add('on');
+            //document.querySelector('.modal_inner .loading_spinner').classList.add('on');
             renderModalData(e.currentTarget.id);
         });
     });
 }
 
-//=====모달 닫기
+// ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 모달 닫기
 document.querySelector('#closeModal').addEventListener('click', function () {
     document.querySelector('body').classList.remove('fixed');
 });
@@ -71,11 +77,12 @@ document.querySelector('.modal_bg_wrap').addEventListener('click', function () {
     document.querySelector('body').classList.remove('fixed');
 });
 
-//=====모달 inner 이벤트 전달끊기
+// ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 모달 inner 이벤트 전달끊기
 document.querySelector('.modal_inner').addEventListener('click', function (e) {
     e.stopPropagation();
 });
 
+// ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 모달 화면에 렌더링
 function renderModalData(prmId) {
     const eleMonName = document.querySelector('#monName');
     const eleMonNumber = document.querySelector('#monNumber');
@@ -96,60 +103,56 @@ function renderModalData(prmId) {
     eleMonHeight.textContent = '';
     eleMonWeight.textContent = '';
 
+    const getLocalData = myLocalPokeData.find((item) => item.id === prmId);
+
+    eleMonName.textContent = getLocalData.name;
+    eleMonNumber.textContent = 'No.' + getLocalData.id;
+    eleMonImage.setAttribute('src', getLocalData.image);
+    eleMonSummary.textContent = getLocalData.koreanDescription;
+    eleDetailViewBtn.addEventListener('click', function () {
+        location.href = `detail.html?id=${getLocalData.id}`;
+    });
+    /* 
     getModalPokemonData(prmId).then((response) => {
         if (response) {
             document.querySelector('.modal_inner .loading_spinner').classList.remove('on');
-            eleMonName.textContent = response.name;
-            eleMonNumber.textContent = response.id;
-            eleMonImage.setAttribute('src', response.image);
-            eleMonSummary.textContent = response.description;
             eleMonAbility.textContent = response.abilities;
             eleMonTypes.textContent = response.types;
             eleMonHeight.textContent = response.height;
             eleMonWeight.textContent = response.weight;
 
             eleDetailViewBtn.addEventListener('click', function () {
-                location.href = `detail.html?id=${response.id}`;
+                location.href = `detail.html?id=${getLocalData.id}`;
             });
         }
-    });
+    }); */
 }
 
-//==================================
-//==================================
-//==================================
-//==================================
-//==================================
+// ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 모달에 사용할 데이터 가져오기
 async function getModalPokemonData(prmId) {
     try {
         const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${prmId}`;
-        const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${prmId}`;
+        //const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${prmId}`;
 
-        const [pokemonResponse, speciesResponse] = await Promise.all([fetch(pokemonUrl), fetch(speciesUrl)]);
+        const pokemonResponse = await fetch(pokemonUrl);
         const pokemonDetail = await pokemonResponse.json();
-        const speciesDetail = await speciesResponse.json();
-
-        // species url로 가서 종 한글 이름 과 종 설명 가져오기
-        const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
-        const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
 
         // ability url로 가서 능력 한글이름 과 설명 가져오기
-        const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
-            console.log(pokemonDetail.abilities.length);
-            const abilityResponse = await fetch(abilityInfo.ability.url);
+        const abilitiesPromises = pokemonDetail.abilities.map(async (item) => {
+            const abilityResponse = await fetch(item.ability.url);
             const abilityDetail = await abilityResponse.json();
 
             // 능력 한글제목 과 능력 설명 가져오기
-            const abilityName = abilityDetail.names.find((name) => name.language.name === 'ko').name;
-            const abilityDescription = abilityDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+            const abilityName = abilityDetail.names.find((item) => item.language.name === 'ko')?.name || '번역없음';
+            const abilityDescription = abilityDetail.flavor_text_entries.find((item) => item.language.name === 'ko')?.flavor_text || '번역없음';
 
             return `${abilityName}: ${abilityDescription}`;
         });
         const abilities = await Promise.all(abilitiesPromises);
 
         //타입 url로 가서 타입 한글 이름 가져오기
-        const typesPromises = pokemonDetail.types.map(async (typeInfo) => {
-            const typeResponse = await fetch(typeInfo.type.url);
+        const typesPromises = pokemonDetail.types.map(async (item) => {
+            const typeResponse = await fetch(item.type.url);
             const typeDetail = await typeResponse.json();
             //console.log('타입', typeDetail);
 
@@ -167,10 +170,11 @@ async function getModalPokemonData(prmId) {
         // ============================================ 필요한 데이터 정리
         // ============================================ 필요한 데이터 정리
         return {
-            name: koreanName,
-            id: pokemonDetail.id,
-            image: pokemonDetail.sprites.other['official-artwork'].front_default,
-            description: koreanDescription,
+            /* id: pokemonDetail.id, //==========
+            name: koreanName, //==========
+            description: koreanDescription, //==========
+            image: pokemonDetail.sprites.other['official-artwork'].front_default, //==========
+ */
             abilities: abilities,
             types: types,
             height: `${pokemonDetail.height} dm (${heightInCm} cm)`,
@@ -182,25 +186,35 @@ async function getModalPokemonData(prmId) {
 }
 
 //=================search======================================================================
+//=================search======================================================================
+//=================search======================================================================
+//=================search======================================================================
 const eleSchBtn = document.querySelector('#submitBtn');
 const eleSchInput = document.querySelector('#inputSearch');
 
 function onSearchHandler(e) {
     searchKeyword = eleSchInput.value.trim().toLowerCase();
-    if (searchKeyword === '') eleSchInput.value = '';
+    /* if (searchKeyword === '') {
+        eleSchInput.value = '';
+        eleSchInput.focus();
+        alert('검색어를 입력해주세요');
+        return;
+    } */
 
     //============== 검색 실행시 가져오기 ===============================
     document.querySelector('#listWrap').innerHTML = '';
-    document.querySelector('.mon_main .loading_spinner').classList.add('on');
+    //document.querySelector('.mon_main .loading_spinner').classList.add('on');
 
-    getPokemonData('search').then((response) => {
+    /* getPokemonData('search').then((response) => {
         const filteredArray = response.filter((item) => {
             return item.name.includes(searchKeyword);
         });
         console.log('검색값 : ', filteredArray);
         document.querySelector('.mon_main .loading_spinner').classList.remove('on');
         renderPokemonList(filteredArray);
-    });
+    }); */
+    filteredArray = myLocalPokeData.filter((item) => item.name.includes(searchKeyword));
+    renderPokemonList(filteredArray);
 }
 
 eleSchBtn.addEventListener('click', function () {

@@ -28,8 +28,8 @@ async function getDetailPokemonData(prmId) {
         const speciesDetail = await speciesResponse.json();
 
         // species url로 가서 종 한글 이름 과 종 설명 가져오기
-        const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
-        const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+        const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+        const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko')?.flavor_text || '번역없음';
 
         // ability url로 가서 능력 한글이름 과 설명 가져오기
         const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
@@ -38,8 +38,8 @@ async function getDetailPokemonData(prmId) {
             const abilityDetail = await abilityResponse.json();
 
             // 능력 한글제목 과 능력 설명 가져오기
-            const abilityName = abilityDetail.names.find((name) => name.language.name === 'ko').name;
-            const abilityDescription = abilityDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+            const abilityName = abilityDetail.names.find((item) => item.language.name === 'ko')?.name || '번역없음';
+            const abilityDescription = abilityDetail.flavor_text_entries.find((item) => item.language.name === 'ko')?.flavor_text || '번역없음';
 
             return `${abilityName}: ${abilityDescription}`;
         });
