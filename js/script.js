@@ -1,8 +1,11 @@
 // 포켓몬 정보를 가져오는 함수
 async function getPokemonData(prmType) {
-    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20';
+    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=740&offset=0';
     if (prmType === 'search') {
-        baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=380';
+        baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=750&offset=200';
+        // baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=380';
+
+        /* baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0'; */
     }
 
     try {
@@ -11,18 +14,25 @@ async function getPokemonData(prmType) {
 
         const pokemonDataPromises = firstData.results.map(async (item) => {
             const pokemonUrl = item.url;
-            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${item.name}`;
+            const parts = item.url.split('/');
+            const pokeId = parts[parts.length - 2];
+            //const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${item.name}`; //기존에 이렇게 이름으로 해서 사용했는데... url 뒤에 항상 같은 이름으로 하지 않는 것이 몇개가 있는데.. 그것들 때문에 404에러가 중간 중간에 났었다.
+            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`; //이름이 아닌 id 숫자값으로 요청을 보낼것이다.
 
+            console.log(pokemonUrl, speciesUrl);
             const [pokemonResponse, speciesResponse] = await Promise.all([fetch(pokemonUrl), fetch(speciesUrl)]);
             const pokemonDetail = await pokemonResponse.json();
             const speciesDetail = await speciesResponse.json();
 
-            const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
+            const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+
+            console.log('이거먼저=====', pokemonDetail.id, koreanName);
 
             return {
                 name: koreanName,
                 id: pokemonDetail.id,
-                image: pokemonDetail.sprites.other['official-artwork'].front_default,
+                //image: pokemonDetail.sprites.other['official-artwork'].front_default,
+                image: pokemonDetail.sprites.front_default,
             };
         });
 
@@ -36,6 +46,7 @@ async function getPokemonData(prmType) {
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.mon_main .loading_spinner').classList.add('on');
     getPokemonData().then((response) => {
+        console.log(response);
         document.querySelector('.mon_main .loading_spinner').classList.remove('on');
         renderPokemonList(response);
     });
@@ -130,8 +141,8 @@ async function getModalPokemonData(prmId) {
         const speciesDetail = await speciesResponse.json();
 
         // species url로 가서 종 한글 이름 과 종 설명 가져오기
-        const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko').name;
-        const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+        const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+        const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko')?.flavor_text || '번역없음';
 
         // ability url로 가서 능력 한글이름 과 설명 가져오기
         const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
@@ -140,8 +151,8 @@ async function getModalPokemonData(prmId) {
             const abilityDetail = await abilityResponse.json();
 
             // 능력 한글제목 과 능력 설명 가져오기
-            const abilityName = abilityDetail.names.find((name) => name.language.name === 'ko').name;
-            const abilityDescription = abilityDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko').flavor_text;
+            const abilityName = abilityDetail.names.find((item) => item.language.name === 'ko')?.name || '번역없음';
+            const abilityDescription = abilityDetail.flavor_text_entries.find((item) => item.language.name === 'ko')?.flavor_text || '번역없음';
 
             return `${abilityName}: ${abilityDescription}`;
         });
@@ -169,7 +180,8 @@ async function getModalPokemonData(prmId) {
         return {
             name: koreanName,
             id: pokemonDetail.id,
-            image: pokemonDetail.sprites.other['official-artwork'].front_default,
+            //image: pokemonDetail.sprites.other['official-artwork'].front_default,
+            image: pokemonDetail.sprites.front_default,
             description: koreanDescription,
             abilities: abilities,
             types: types,

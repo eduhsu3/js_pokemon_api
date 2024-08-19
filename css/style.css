@@ -76,7 +76,7 @@ button:hover{
 
 
 
-.list_wrap{ display: flex; flex-wrap: wrap; align-items: flex-start; border: 6px solid green; padding: 40px; min-height: 500px; }
+.list_wrap{ display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; border: 6px solid green; padding: 40px; min-height: 500px; }
 .list_wrap .item_box{  width: calc((100% - 90px) / 10); margin-right: 10px; margin-bottom: 10px; height: auto; border: 1px solid #000; overflow: hidden; cursor: pointer;}
 .list_wrap .item_box:nth-of-type(10n){ margin-right: 0;}
 
