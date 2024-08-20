@@ -8,7 +8,7 @@ function getQueryParam(param) {
 // 페이지 로드 시 데이터 가져오기
 document.addEventListener('DOMContentLoaded', () => {
     currentPokemonId = getQueryParam('id');
-    console.log(currentPokemonId);
+    //console.log(currentPokemonId);
 
     document.querySelector('.detail_container .loading_spinner').classList.add('on');
     getDetailPokemonData(currentPokemonId).then((response) => {
@@ -33,7 +33,7 @@ async function getDetailPokemonData(prmId) {
 
         // ability url로 가서 능력 한글이름 과 설명 가져오기
         const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
-            console.log(pokemonDetail.abilities.length);
+            //console.log(pokemonDetail.abilities.length);
             const abilityResponse = await fetch(abilityInfo.ability.url);
             const abilityDetail = await abilityResponse.json();
 
@@ -85,7 +85,7 @@ async function getDetailPokemonData(prmId) {
 }
 
 function displayRender(responsePokemonData) {
-    console.log(responsePokemonData);
+    // console.log(responsePokemonData);
     const eleMonName = document.querySelector('#monName');
     const eleMonNumber = document.querySelector('#monNumber');
     const eleMonImage = document.querySelector('#monImage');
@@ -108,7 +108,7 @@ function displayRender(responsePokemonData) {
     eleMonNumber.textContent = 'No.' + responsePokemonData.id;
     eleMonImage.setAttribute('src', responsePokemonData.image);
     eleMonSummary.textContent = responsePokemonData.description;
-    eleMonAbility.textContent = responsePokemonData.abilities;
+    eleMonAbility.innerHTML = responsePokemonData.abilities.map((item) => `<p>${item}</p>`).join('');
     eleMonTypes.textContent = responsePokemonData.types.map((item) => item.ko).join(',');
     eleMonHeight.textContent = responsePokemonData.height;
     eleMonWeight.textContent = responsePokemonData.weight;
