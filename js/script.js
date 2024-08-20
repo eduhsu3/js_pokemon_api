@@ -97,7 +97,7 @@ async function getPokemonData(prmGenNum) {
     }
 }
 
-const initGenNum = 9;
+const initGenNum = 1;
 // 페이지 로드 시 데이터 가져오기
 document.addEventListener('DOMContentLoaded', () => {
     startDataLoading(initGenNum);
