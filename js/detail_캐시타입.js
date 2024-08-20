@@ -1,3 +1,5 @@
+/* ========================================= 캐시타입 ========================================= */
+
 let currentPokemonId = null;
 
 function getQueryParam(param) {
@@ -18,57 +20,64 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 포켓몬 정보를 가져오는 함수
+// 캐시를 저장할 객체를 선언합니다.
+const cache = {};
+
+// 캐시를 사용하는 fetch 함수
+async function fetchWithCache(url) {
+    // 캐시에 해당 URL의 데이터가 있는지 확인합니다.
+    if (cache[url]) {
+        return cache[url]; // 캐시된 데이터를 반환합니다.
+    }
+    // 캐시에 없으면 데이터를 fetch합니다.
+    const response = await fetch(url);
+    const data = await response.json();
+    cache[url] = data; // 데이터를 캐시에 저장합니다.
+    return data;
+}
+
+// 특정 포켓몬의 상세 데이터를 가져오는 함수
 async function getDetailPokemonData(prmId) {
     try {
+        // 포켓몬과 종(species)의 API URL을 생성합니다.
         const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${prmId}`;
         const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${prmId}`;
 
-        const [pokemonResponse, speciesResponse] = await Promise.all([fetch(pokemonUrl), fetch(speciesUrl)]);
-        const pokemonDetail = await pokemonResponse.json();
-        const speciesDetail = await speciesResponse.json();
+        // 포켓몬과 종 데이터를 병렬로 요청하여 성능을 최적화합니다.
+        const [pokemonDetail, speciesDetail] = await Promise.all([fetchWithCache(pokemonUrl), fetchWithCache(speciesUrl)]);
 
-        // species url로 가서 종 한글 이름 과 종 설명 가져오기
+        // abilities와 types 병렬 처리
+        const [abilities, types] = await Promise.all([
+            // 포켓몬의 능력(abilities)을 병렬로 가져옵니다.
+            Promise.all(
+                pokemonDetail.abilities.map(async (abilityInfo) => {
+                    const abilityDetail = await fetchWithCache(abilityInfo.ability.url);
+                    const abilityName = abilityDetail.names.find((item) => item.language.name === 'ko')?.name || '번역없음';
+                    const abilityDescription = abilityDetail.flavor_text_entries.find((item) => item.language.name === 'ko')?.flavor_text || '번역없음';
+                    return `${abilityName}: ${abilityDescription}`;
+                })
+            ),
+            // 포켓몬의 타입(types)을 병렬로 가져옵니다.
+            Promise.all(
+                pokemonDetail.types.map(async (typeInfo) => {
+                    const typeDetail = await fetchWithCache(typeInfo.type.url);
+                    const koreanName = typeDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+                    const englishName = typeDetail.names.find((name) => name.language.name === 'en')?.name || 'No English Name';
+                    return { ko: koreanName, en: englishName };
+                })
+            ),
+        ]);
+
+        // 포켓몬의 한국어 이름을 가져옵니다.
         const koreanName = speciesDetail.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+        // 포켓몬의 한국어 설명을 가져옵니다.
         const koreanDescription = speciesDetail.flavor_text_entries.find((entry) => entry.language.name === 'ko')?.flavor_text || '번역없음';
 
-        // ability url로 가서 능력 한글이름 과 설명 가져오기
-        const abilitiesPromises = pokemonDetail.abilities.map(async (abilityInfo) => {
-            //console.log(pokemonDetail.abilities.length);
-            const abilityResponse = await fetch(abilityInfo.ability.url);
-            const abilityDetail = await abilityResponse.json();
-
-            // 능력 한글제목 과 능력 설명 가져오기
-            const abilityName = abilityDetail.names.find((item) => item.language.name === 'ko')?.name || '번역없음';
-            const abilityDescription = abilityDetail.flavor_text_entries.find((item) => item.language.name === 'ko')?.flavor_text || '번역없음';
-
-            return `${abilityName}: ${abilityDescription}`;
-        });
-        const abilities = await Promise.all(abilitiesPromises);
-
-        //타입 url로 가서 타입 한글 이름 가져오기
-        const typesPromises = pokemonDetail.types.map(async (typeInfo) => {
-            const typeResponse = await fetch(typeInfo.type.url);
-            const typeDetail = await typeResponse.json();
-            //console.log('타입', typeDetail);
-
-            // 타입(types) 한글, 영문 각가 가져오기
-            const koreanName = typeDetail.names.find((name) => name.language.name === 'ko').name;
-            const englishName = typeDetail.names.find((name) => name.language.name === 'en').name;
-            return {
-                ko: koreanName, // ko :['불','독']
-                en: englishName, // en : ['fire','danger']
-            };
-        });
-        //console.log(typesPromises);
-        const types = await Promise.all(typesPromises);
-
-        // 높이, 무게 가져와서 치수 변경
+        // 키와 몸무게를 적절한 단위로 변환합니다.
         const heightInCm = pokemonDetail.height * 10; // dm를 cm로 변환
         const weightInKg = pokemonDetail.weight / 10; // hg를 kg로 변환
 
-        // ============================================ 필요한 데이터 정리
-        // ============================================ 필요한 데이터 정리
-        // ============================================ 필요한 데이터 정리
+        // 최종 데이터를 반환합니다.
         return {
             name: koreanName,
             id: pokemonDetail.id,
@@ -80,6 +89,7 @@ async function getDetailPokemonData(prmId) {
             weight: `${pokemonDetail.weight} hg (${weightInKg} kg)`,
         };
     } catch (error) {
+        // 에러 발생 시 콘솔에 로그를 남깁니다.
         console.error('Error fetching Pokémon data:', error);
     }
 }
@@ -153,12 +163,27 @@ const nextBtn = document.querySelector('.next_btn');
 prevBtn.addEventListener('click', () => {
     currentPokemonId = Number(currentPokemonId) - 1;
     if (currentPokemonId === 0) currentPokemonId = 1025;
-    location.href = `detail.html?id=${currentPokemonId}`;
+
+    document.querySelector('.detail_container .loading_spinner').classList.add('on');
+    getDetailPokemonData(currentPokemonId).then((response) => {
+        const newUrl = `${window.location.pathname}?id=${currentPokemonId}`;
+        window.history.pushState({ id: currentPokemonId }, '', newUrl);
+        document.querySelector('.detail_container .loading_spinner').classList.remove('on');
+        displayRender(response);
+    });
 });
 nextBtn.addEventListener('click', () => {
     currentPokemonId = Number(currentPokemonId) + 1;
     if (currentPokemonId > 1025) currentPokemonId = 1;
-    location.href = `detail.html?id=${currentPokemonId}`;
+
+    console.log('next');
+    document.querySelector('.detail_container .loading_spinner').classList.add('on');
+    getDetailPokemonData(currentPokemonId).then((response) => {
+        const newUrl = `${window.location.pathname}?id=${currentPokemonId}`;
+        window.history.pushState({ id: currentPokemonId }, '', newUrl);
+        document.querySelector('.detail_container .loading_spinner').classList.remove('on');
+        displayRender(response);
+    });
 });
 
 //home btn ===================================================
