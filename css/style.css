@@ -70,7 +70,9 @@ button:hover{
 
 .mon_search{ padding: 40px; text-align: center;}
 
-
+.gen_menu_wrap{ display: flex; justify-content: center;}
+.gen_menu_wrap button{ margin:  0 5px;}
+.gen_menu_wrap button.on{ background-color: #000; border-color: #000;}
 
 .mon_main{ position: relative;}
 
@@ -147,8 +149,8 @@ body.fixed .modal_bg_wrap{ display: flex; }
 
 /*  ======================== loading_spinner =========================  */
 /* loading_spinner */
-.loading_spinner{ display: none; justify-content: center; align-items: center;  position: absolute; z-index: 100; top: 0; left: 0; right: 0; bottom: 0;  }
-.loading_spinner:after{ content: ''; display: block; width: 38px; height: 38px; background-image: url(../images/icon_ball.png); background-repeat: no-repeat; background-position: center center; animation: rotateAni 0.3s ease-in-out infinite;}
+.loading_spinner{ display: none; justify-content: center; align-items: center;  position: absolute; z-index: 100; top: 0; left: 0; right: 0; bottom: 0; }
+.loading_spinner::after{ content: ''; display: block; width: 38px; height: 38px;  background-image: url(../images/icon_ball.png); background-repeat: no-repeat; background-position: center center; animation: rotateAni 0.3s ease-in-out infinite;}
 .loading_spinner.on{ display: flex; }
 @keyframes rotateAni{
     0%{ transform: rotate(0deg);}    
@@ -157,18 +159,19 @@ body.fixed .modal_bg_wrap{ display: flex; }
 
 
 
+
 /* =============== detail container =========================== */
 .detail_container{ position: relative; text-align: center;}
 .detail_container .top_btn{ position: absolute; top: 55px; left: 50%; width: 60%; transform: translateX(-50%); padding: 0 40px;  display: flex; justify-content: space-between;}
-.detail_container .top_btn .home_btn{ padding: 10px; font-size: 2rem; color: rgba(0, 0, 0, 0.5); background-color: transparent; border: none;}
-.detail_container .detail_top{ padding: 40px;}
+.detail_container .top_btn .home_btn{ position: absolute; padding: 10px; font-size: 2rem; color: rgba(0, 0, 0, 0.5); background-color: transparent; border: none;}
+.detail_container .detail_top{ padding: 40px; height: 700px;}
 .detail_container .detail_body{ padding: 40px;}
 
 
 /* ----------------- */
-.detail_container .m_name{ font-size: 3rem;}
+.detail_container .m_name{ font-size: 3rem; }
 .detail_container .m_num{ font-size: 1.2rem; color: rgba(255, 255, 255, 0.5); font-weight: bold;}
-.detail_container .m_img{ padding: 0 20%;}
+.detail_container .m_img{ padding: 0 20%; height: 475px;}
 .detail_container .m_summary{ font-size: 1.5rem;}
 /* prev next btn */
 .detail_container .prev_next{ position: absolute; top: 300px; left: 50%; width: 60%; transform: translateX(-50%); padding: 0 20px;  display: flex; justify-content: space-between;}
@@ -177,6 +180,11 @@ body.fixed .modal_bg_wrap{ display: flex; }
 .detail_container .prev_next button.prev_btn{}
 .detail_container .prev_next button.next_btn{}
 
+
+
+
+
+
 @media screen and (max-width:1200px){
     .detail_container .prev_next{  width: 100%; }
 
@@ -184,8 +192,9 @@ body.fixed .modal_bg_wrap{ display: flex; }
 
 }
 @media screen and (max-width:840px){
-    .detail_container .detail_top{ padding: 15px;}
+    .detail_container .detail_top{ padding: 15px; height: auto;}
     .detail_container .m_name{ font-size: 1.8rem;}
+    .detail_container .m_img{ height: auto;}
     .detail_container .m_summary{ font-size: 1.2rem;}
     .detail_container .prev_next{ width: 100%;  top: 25%; }
     .detail_container .prev_next button{  width: 3rem; height: 3rem; padding: 0 10px; font-size: 1.5rem; }

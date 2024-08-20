@@ -1,18 +1,79 @@
 let myLocalPokeData = [];
 
+// 세데별 메뉴
+async function getMenu() {
+    try {
+        const url = 'https://pokeapi.co/api/v2/generation/';
+        const result = await fetch(url);
+        const data = await result.json();
+
+        // 각 세대 URL로부터 한국어 이름 가져오기
+        const menuPromises = data.results.map(async (item) => {
+            const response = await fetch(item.url);
+            const generationData = await response.json();
+            return generationData.names.find((name) => name.language.name === 'ko')?.name || '번역없음';
+        });
+
+        // 모든 비동기 작업이 완료될 때까지 기다림
+        return Promise.all(menuPromises);
+    } catch (err) {
+        console.error('Error fetching generation data:', err);
+        return [];
+    }
+}
+
+getMenu().then((generationNames) => {
+    renderGenMenu(generationNames);
+
+    const buttonArr = document.querySelector('.gen_menu_wrap').querySelectorAll('button');
+    buttonArr[initGenNum - 1].classList.add('on');
+});
+
+function renderGenMenu(generationNames) {
+    const eleMenuWrap = document.querySelector('.gen_menu_wrap');
+    // DOM 조작을 최소화하기 위해 HTML 문자열을 한 번에 생성
+    const buttonsHTML = generationNames.map((name, idx) => `<button type="button" id="genBtn_${idx + 1}">${name}</button>`).join('');
+    eleMenuWrap.innerHTML = buttonsHTML;
+
+    //위와 같이 동적생성된 id를 가진 부모에 이벤트 위임 처리한다.
+    eleMenuWrap.addEventListener('click', function (e) {
+        const isButton = e.target.closest([(type = 'button')]);
+        if (isButton) {
+            const buttons = isButton.closest('div').querySelectorAll('button');
+            // 모든 버튼 요소에서 'on' 클래스를 제거
+            buttons.forEach((button) => {
+                button.classList.remove('on');
+            });
+            isButton.classList.add('on');
+            const splitTxt = isButton.getAttribute('id').split('_');
+            const genNum = splitTxt[splitTxt.length - 1];
+            startDataLoading(genNum);
+        }
+    });
+}
+
+/* async function testFnc() {
+    const testUrl = 'https://pokeapi.co/api/v2/generation/1';
+    const dd = await fetch(testUrl);
+    const data = await dd.json();
+    console.log('data : ', data.pokemon_species);
+}
+testFnc(); */
+
 // 포켓몬 정보를 가져오는 함수
-async function getPokemonData() {
-    let baseUrl = 'https://pokeapi.co/api/v2/pokemon?limit=1025';
+async function getPokemonData(prmGenNum) {
+    let baseUrl = `https://pokeapi.co/api/v2/generation/${prmGenNum}`;
 
     try {
         const response = await fetch(baseUrl);
         const firstData = await response.json();
 
-        const pokemonDataPromises = firstData.results.map(async (item) => {
-            const pokemonUrl = item.url;
+        const pokemonDataPromises = firstData.pokemon_species.map(async (item) => {
+            console.log(firstData.pokemon_species.length);
             const divide = item.url.split('/');
             const pokeId = divide[divide.length - 2];
-            const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokeId}`; //이름이 아닌 id 숫자값으로 요청을 보낼것이다.
+            //const pokemonUrl = item.url;
+            const speciesUrl = item.url;
 
             const speciesResponse = await fetch(speciesUrl);
             const speciesDetail = await speciesResponse.json();
@@ -36,19 +97,26 @@ async function getPokemonData() {
     }
 }
 
+const initGenNum = 9;
 // 페이지 로드 시 데이터 가져오기
 document.addEventListener('DOMContentLoaded', () => {
+    startDataLoading(initGenNum);
+});
+
+function startDataLoading(prmGenNum) {
     document.querySelector('.mon_main .loading_spinner').classList.add('on');
-    getPokemonData().then((response) => {
+    getPokemonData(prmGenNum).then((response) => {
         myLocalPokeData = [...response];
         document.querySelector('.mon_main .loading_spinner').classList.remove('on');
         renderPokemonList(myLocalPokeData);
     });
-});
+}
 
 // 데이터를 화면에 출력하는 함수
 function renderPokemonList(prmArrayData) {
     const eleListWrap = document.querySelector('#listWrap');
+
+    eleListWrap.innerHTML = '';
     prmArrayData.forEach((item, idx) => {
         const eleDiv = document.createElement('div');
         eleDiv.id = item.id; //id 값 div에 넣어두기

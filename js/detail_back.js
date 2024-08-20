@@ -153,24 +153,12 @@ const nextBtn = document.querySelector('.next_btn');
 prevBtn.addEventListener('click', () => {
     currentPokemonId = Number(currentPokemonId) - 1;
     if (currentPokemonId === 0) currentPokemonId = 1025;
-    //location.href = `detail.html?id=${currentPokemonId}`;
-    console.log('prev');
-    document.querySelector('.detail_container .loading_spinner').classList.add('on');
-    getDetailPokemonData(currentPokemonId).then((response) => {
-        document.querySelector('.detail_container .loading_spinner').classList.remove('on');
-        displayRender(response);
-    });
+    location.href = `detail.html?id=${currentPokemonId}`;
 });
 nextBtn.addEventListener('click', () => {
     currentPokemonId = Number(currentPokemonId) + 1;
     if (currentPokemonId > 1025) currentPokemonId = 1;
-    //location.href = `detail.html?id=${currentPokemonId}`;
-    console.log('next');
-    document.querySelector('.detail_container .loading_spinner').classList.add('on');
-    getDetailPokemonData(currentPokemonId).then((response) => {
-        document.querySelector('.detail_container .loading_spinner').classList.remove('on');
-        displayRender(response);
-    });
+    location.href = `detail.html?id=${currentPokemonId}`;
 });
 
 //home btn ===================================================
