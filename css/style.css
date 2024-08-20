@@ -77,8 +77,8 @@ button:hover{
 
 
 .list_wrap{ display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start;  padding: 40px; min-height: 500px; }
-.list_wrap .item_box{  width: calc((100% - 90px) / 10); margin-right: 10px; margin-bottom: 10px; padding-top: 20px; height: auto;  overflow: hidden; cursor: pointer; background-color: #fff; border-radius: 16px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); transition: all 0.1s ease-in-out;}
-.list_wrap .item_box:hover{ transform: scale(1.15);
+.list_wrap .item_box{  width: calc((100% - 90px) / 10); margin-right: 10px; margin-bottom: 10px; padding-top: 20px; height: auto;  overflow: hidden; cursor: pointer; background-color: #fff; border-radius: 16px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); transition: all 0.08s ease-in-out;}
+.list_wrap .item_box:hover{ transform: scale(1.18);
     background-color: #000; color: #fff;
 }
 .list_wrap .item_box:hover .m_name{ color: #fff;}
@@ -113,12 +113,12 @@ button:hover{
 }
 
 /*  ======================== modal =========================  */
-.modal_bg_wrap{  display: none;/* display: flex; */ justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); }
+.modal_bg_wrap{  display: none;/* display: flex; */ justify-content: center; align-items: center; position: fixed; z-index: 100; top: 0px; right: 0px; left: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.8); }
 .modal_inner{ position: relative;  width: 800px; min-height: 320px;  background-color: #fff;  border-radius: 14px; box-shadow: 0 0 6px rgba(0, 0, 0, 0.5); padding: 40px;}
 .modal_cnt{ position: relative; padding-left: 340px;}
 .modal_inner .m_name{ }
 .modal_inner .m_num{ }
-.modal_inner .m_img{  position: absolute; left: -180px; top: -70px; }
+.modal_inner .m_img{  position: absolute; left: -170px; top: -100px; }
 /* .modal_inner .m_img img{ width: 400px;} */
 .modal_inner .m_summary{ margin-top: 15px; font-size: 1.4rem;}
 .modal_inner .m_ability{ }
@@ -159,12 +159,18 @@ body.fixed .modal_bg_wrap{ display: flex; }
 
 /* =============== detail container =========================== */
 .detail_container{ position: relative; text-align: center;}
+.detail_container .top_btn{ position: absolute; top: 55px; left: 50%; width: 60%; transform: translateX(-50%); padding: 0 40px;  display: flex; justify-content: space-between;}
+.detail_container .top_btn .home_btn{ padding: 10px; font-size: 2rem; color: rgba(0, 0, 0, 0.5); background-color: transparent; border: none;}
 .detail_container .detail_top{ padding: 40px;}
 .detail_container .detail_body{ padding: 40px;}
+
+
+/* ----------------- */
 .detail_container .m_name{ font-size: 3rem;}
-.detail_container .m_num{ }
+.detail_container .m_num{ font-size: 1.2rem; color: rgba(255, 255, 255, 0.5); font-weight: bold;}
 .detail_container .m_img{ padding: 0 20%;}
 .detail_container .m_summary{ font-size: 1.5rem;}
+/* prev next btn */
 .detail_container .prev_next{ position: absolute; top: 300px; left: 50%; width: 60%; transform: translateX(-50%); padding: 0 20px;  display: flex; justify-content: space-between;}
 .detail_container .prev_next button{  width: 100px; height: 100px; border-radius: 50%; font-size: 4rem; background-color: transparent; border: none;}
 .detail_container .prev_next button:hover{ background-color: rgba(255, 255, 255, 0.2);}
@@ -173,10 +179,21 @@ body.fixed .modal_bg_wrap{ display: flex; }
 
 @media screen and (max-width:1200px){
     .detail_container .prev_next{  width: 100%; }
+
+    .detail_container .top_btn{ width: 100%;}
+
 }
 @media screen and (max-width:840px){
-    .detail_container .prev_next{  top: 25%; }
+    .detail_container .detail_top{ padding: 15px;}
+    .detail_container .m_name{ font-size: 1.8rem;}
+    .detail_container .m_summary{ font-size: 1.2rem;}
+    .detail_container .prev_next{ width: 100%;  top: 25%; }
     .detail_container .prev_next button{  width: 3rem; height: 3rem; padding: 0 10px; font-size: 1.5rem; }
+    .detail_container .prev_next button.prev_btn{ margin-left: -20px;}
+    .detail_container .prev_next button.next_btn{ margin-right: -20px;}
+
+    .detail_container .top_btn{ width: 100%; top: 15px; padding:0 20px;}
+    .detail_container .top_btn .home_btn { padding: 5px;  font-size: 1.3rem; }
 }
 @media screen and (max-width:640px){
     .detail_container .m_img{ padding: 0 8%;}
