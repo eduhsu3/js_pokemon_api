@@ -69,10 +69,26 @@ button:hover{
 
 
 .mon_search{ padding: 40px; text-align: center;}
+@media screen and (max-width: 460px){    
+    .mon_search{display: flex;}
+    .mon_search input{ flex:1 1 0; min-width: 0;}
+    .mon_search button{ flex-shrink: 0; width: 70px; margin-left: 5px; }
+}
 
 .gen_menu_wrap{ display: flex; justify-content: center;}
-.gen_menu_wrap button{ margin:  0 5px;}
+.gen_menu_wrap button{ flex-shrink: 0; margin:  0 5px;}
 .gen_menu_wrap button.on{ background-color: #000; border-color: #000;}
+@media screen and (max-width: 670px){
+    .gen_menu_wrap{ justify-content: flex-start; overflow-x: auto;}
+   
+
+}
+@media screen and (max-width: 460px){    
+    .gen_menu_wrap button{ font-size: 0.8rem; padding: 5px; margin: 0 3px;}
+}
+
+
+
 
 .mon_main{ position: relative;}
 
