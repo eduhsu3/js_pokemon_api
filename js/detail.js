@@ -105,7 +105,7 @@ function displayRender(responsePokemonData) {
     eleMonWeight.textContent = '';
 
     eleMonName.textContent = responsePokemonData.name;
-    eleMonNumber.textContent = responsePokemonData.id;
+    eleMonNumber.textContent = 'No.' + responsePokemonData.id;
     eleMonImage.setAttribute('src', responsePokemonData.image);
     eleMonSummary.textContent = responsePokemonData.description;
     eleMonAbility.textContent = responsePokemonData.abilities;
@@ -146,3 +146,23 @@ function displayRender(responsePokemonData) {
     const ele = document.querySelectorAll('.detail_top');
     setElementStyles(ele, 'background-color', typeColor);
 }
+
+// prev next btn =============================================
+const prevBtn = document.querySelector('.prev_btn');
+const nextBtn = document.querySelector('.next_btn');
+prevBtn.addEventListener('click', () => {
+    currentPokemonId = Number(currentPokemonId) - 1;
+    if (currentPokemonId === 0) currentPokemonId = 1025;
+    location.href = `detail.html?id=${currentPokemonId}`;
+});
+nextBtn.addEventListener('click', () => {
+    currentPokemonId = Number(currentPokemonId) + 1;
+    if (currentPokemonId > 1025) currentPokemonId = 1;
+    location.href = `detail.html?id=${currentPokemonId}`;
+});
+
+//home btn ===================================================
+const homeBtn = document.querySelector('.home_btn');
+homeBtn.addEventListener('click', () => {
+    location.href = `index.html`;
+});
