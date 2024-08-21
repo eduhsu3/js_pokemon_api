@@ -104,10 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function startDataLoading(prmGenNum) {
-    document.querySelector('.mon_main .loading_spinner').classList.add('on');
+    document.querySelector('body > .loading_spinner').classList.add('on');
     getPokemonData(prmGenNum).then((response) => {
         myLocalPokeData = [...response];
-        document.querySelector('.mon_main .loading_spinner').classList.remove('on');
+        document.querySelector('body > .loading_spinner').classList.remove('on');
         renderPokemonList(myLocalPokeData);
     });
 }
@@ -302,3 +302,23 @@ eleSchInput.addEventListener('keyup', function (e) {
         limit = 10;
         loadPost();
     }); */
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modeBtn = document.querySelector('.mode_btn');
+
+    modeBtn.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+
+        // 현재 모드를 로컬스토리지에 저장
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // 페이지 로드 시 이전 모드를 확인하여 적용
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+});
