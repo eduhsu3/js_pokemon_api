@@ -266,7 +266,9 @@ body.fixed .modal_bg_wrap{ display: flex; }
     0%{ transform: rotate(0deg);}    
     100%{ transform: rotate(360deg);}        
 }
-
+@media screen and (max-width: 960px){
+    .loading_spinner::after{ width: 80px; height: 80px; }
+}
 
 
 
