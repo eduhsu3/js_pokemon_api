@@ -24,15 +24,7 @@ body { width: 100%; height: 100%; background-color: #000; font-family: "Noto San
 /* css 변수 ============================================================ */
 :root {
     /* 오리지널 디자인 색상 */
-    --bg-color-light: #f5f5fa;
-    --text-color-light: #333;
-    --button-bg-light: #6c757d;
-    --button-text-light: #fff;
-    --input-bg-light: #fff;
-    --input-border-light: #ccc;
-    --modal-bg-light: #fff;
-    --item-bg-light:#fff;
-    --item-shadow-light:rgba(0, 0, 0, 0.2);
+
     
     /* ========== 다크모드 색상 ============= */
     --bg-color-dark: #1c1c1c;
@@ -46,50 +38,26 @@ body { width: 100%; height: 100%; background-color: #000; font-family: "Noto San
     --item-shadow-dark:rgba(255, 255, 255, 0.2);
 }
 
- /* 오리지널 디자인 색상 */
-body {
-    background-color: var(--bg-color-light);
-    color: var(--text-color-light);
-}
-
-button {
-    background-color: var(--button-bg-light);
-    color: var(--button-text-light);
-}
-
-input, textarea {
-    background-color: var(--input-bg-light);
-    border-color: var(--input-border-light);
-    color: var(--text-color-light);
-}
-
-
-
 
 /* ========== 다크모드 색상 ============= */
 body.dark-mode {
     background-color: var(--bg-color-dark);
-    color: var(--text-color-dark);
+    
 }
 
-body.dark-mode button {
-    background-color: var(--button-bg-dark);
-    color: var(--button-text-dark);
-}
+/* 세대별 메뉴 */
+body.dark-mode .gen_menu_wrap button{  background-color: #333638;}
+body.dark-mode .gen_menu_wrap button:hover{  background-color: #4d5051;}
 
-body.dark-mode input, body.dark-mode textarea {
-    background-color: var(--input-bg-dark);
-    border-color: var(--input-border-dark);
-    color: var(--text-color-dark);
-}
+
 
 body.dark-mode .modal_inner {
-    background-color: var(--modal-bg-dark);
+    background-color: #fff;
 }
 body.dark-mode .list_wrap .item_box{ background-color: var(--item-bg-dark); box-shadow: var(--item-shadow-dark); }
 
 body.dark-mode .list_wrap .item_box .m_name{  color: var(--text-color-dark); }
-body.dark-mode .list_wrap .item_box:hover {  background-color: var(--item-bg-light); }
+body.dark-mode .list_wrap .item_box:hover {  background-color: #fff; }
 body.dark-mode .list_wrap .item_box:hover .m_name{  color: var(--bg-color-dark); }
 
 
@@ -158,32 +126,60 @@ button:hover{
 header{ position: relative; display: flex; justify-content: center; padding: 20px;}
 header .logo{ }
 header .logo img{ width: 220px; }
+
+/* 다크모드 버튼 */
 header .mode{ position: absolute; top: 35px; right:40px}
-header .mode button{ display: block; width: 80px; height: 36px; border-radius: 30px; background-color: #7d7d7d; border: none;}
+header .mode button{ display: block; width: 50px; height: 50px; border-radius: 50px; background-color: #7d7d7d; border: none;transition: all 0.3s;}
+header .mode button:hover{ background-color: #222;}
+header .mode button::before{ content: '\ef75'; display: block; width: 100%; height: 100%; font-family: "remixicon"; font-size: 1.7rem; display: flex;justify-content: center; align-items: center; }
+header .mode button:hover::before{ content: '\ef72'; color: #FFCE31; }
+body.dark-mode header .mode button:hover{ background-color: #000000;}
+body.dark-mode header .mode button::before{ content: '\f1bf'; }
+body.dark-mode header .mode button:hover::before{ content: '\f1bc'; }
+@media screen and (max-width: 580px){
+    
+}
+@media screen and (max-width: 460px){   
+    header{  padding: 20px 10px 10px;}
+    header .logo{ }
+    header .logo img{ width: 130px; }
+
+    header .mode{ top: 25px; right:15px}
+    header .mode button{ width: 36px; height: 36px; }
+    header .mode button::before{  font-size: 1.4rem; }
+
+}
 
 
 
 
-
-.top_tools{ display: flex; flex-direction: column; align-items: center;}
+.top_tools{ }
 
 /* 세대별 메뉴 */
 .gen_menu_wrap{ display: flex; justify-content: center;}
-.gen_menu_wrap button{ flex-shrink: 0; margin:  0 5px; padding: 5px 20px; border-radius: 20px; border: none; font-size: 1.1rem; opacity: 1;}
-.gen_menu_wrap button.on{ background-color: #FFCE31; color:#333099; border:4px solid #333099 }
+.gen_menu_wrap button{ flex-shrink: 0; margin:  0 5px; padding: 5px 20px; border-radius: 20px; border: none; font-size: 1.1rem; opacity: 1; background-color: #b8bbbc;}
+.gen_menu_wrap button:hover{  background-color: #808789;}
+.gen_menu_wrap button.on{ background-color: #FFCE31 !important; color:#333099; border:4px solid #333099; box-shadow:-2px 4px 0px #171a3b ;}
 
 /* 검색 */
-.search_wrap{ margin-top: 20px;}
-.mon_search{ display: flex; align-items: center; max-width: 300px; padding: 10px 13px; border-radius: 30px; background-color: #FFCE31; }
+.search_wrap{ margin-top: 20px; display: flex; justify-content: center;}
+.mon_search{ display: flex; align-items: center; max-width: 300px; padding: 10px 13px; border-radius: 30px; background-color: #FFCE31; border:4px solid #333099; box-shadow:-2px 4px 0px #171a3b ; }
 .mon_search input{ flex: 1; min-width: 0; border-radius: 20px; border: none; text-align: center; height: 38px; font-size: 1.4rem; background-color: #fff;}
 .mon_search .sch_btn{ font-size: 1.1rem; font-weight: 700; background-color: transparent; border: none; color: #333099;}
 
 
-@media screen and (max-width: 670px){
-    .gen_menu_wrap{ justify-content: flex-start; overflow-x: auto;}
+@media screen and (max-width: 960px){
+    .top_tools{  display: block;}
+    .gen_menu_wrap{ justify-content: flex-start; overflow-x: auto; padding: 0 20px 10px;}
 }
 @media screen and (max-width: 460px){    
-    .gen_menu_wrap button{ font-size: 0.8rem; padding: 5px; margin: 0 3px;}
+    .gen_menu_wrap button{ font-size: 0.8rem; padding: 5px 10px; margin: 0 3px;}
+
+    .search_wrap{ margin-top: 10px; display: flex; justify-content: center;}
+    .mon_search{ max-width: 80%; padding: 6px 10px;  }
+    .mon_search input{ height: 30px; font-size: 1.2rem; }
+    .mon_search .sch_btn{ font-size: 1.1rem; font-weight: 700; background-color: transparent; border: none; color: #333099;}
+
 }
 
 
@@ -219,7 +215,7 @@ header .mode button{ display: block; width: 80px; height: 36px; border-radius: 3
 
 }
 @media screen and (max-width: 580px){
-    
+    .list_wrap{ padding: 40px 20px; min-height: 500px; }
     .list_wrap .item_box{  width: calc((100% - 10px) / 2);}
     .list_wrap .item_box:nth-of-type(10n){ margin-right: 10px;}
     .list_wrap .item_box:nth-of-type(6n){ margin-right: 10px;}    
@@ -264,7 +260,7 @@ body.fixed .modal_bg_wrap{ display: flex; }
 /*  ======================== loading_spinner =========================  */
 /* loading_spinner */
 .loading_spinner{ display: none; justify-content: center; align-items: center;  position: absolute; z-index: 100; top: 0; left: 0; right: 0; bottom: 0; }
-.loading_spinner::after{ content: ''; display: block; width: 38px; height: 38px;  background-image: url(../images/icon_ball.png); background-repeat: no-repeat; background-position: center center; animation: rotateAni 0.3s ease-in-out infinite;}
+.loading_spinner::after{ content: ''; display: block; width: 200px; height: 200px; border-radius: 100%;  background-image: url(../images/ball2.png); background-repeat: no-repeat; background-position: center center; background-size: 60%; background-color: #fff; animation: rotateAni 0.3s ease-in-out infinite;}
 .loading_spinner.on{ display: flex; }
 @keyframes rotateAni{
     0%{ transform: rotate(0deg);}    
