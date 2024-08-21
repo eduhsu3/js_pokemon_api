@@ -176,7 +176,6 @@ header .mode button{ display: block; width: 80px; height: 36px; border-radius: 3
 .search_wrap{ margin-top: 20px;}
 .mon_search{ display: flex; align-items: center; max-width: 300px; padding: 10px 13px; border-radius: 30px; background-color: #FFCE31; }
 .mon_search input{ flex: 1; min-width: 0; border-radius: 20px; border: none; text-align: center; height: 38px; font-size: 1.4rem; background-color: #fff;}
-.mon_search input:focus{#333099;}
 .mon_search .sch_btn{ font-size: 1.1rem; font-weight: 700; background-color: transparent; border: none; color: #333099;}
 
 
