@@ -107,8 +107,11 @@ function startDataLoading(prmGenNum) {
     document.querySelector('body > .loading_spinner').classList.add('on');
     getPokemonData(prmGenNum).then((response) => {
         myLocalPokeData = [...response];
+        myLocalPokeData.sort((a, b) => a.id - b.id); //id 순으로 정렬
+        console.log(myLocalPokeData);
         document.querySelector('body > .loading_spinner').classList.remove('on');
         renderPokemonList(myLocalPokeData);
+        initMakeRandomPokeSlider();
     });
 }
 
@@ -136,6 +139,98 @@ function renderPokemonList(prmArrayData) {
         });
     });
 }
+
+// myLocalPokeData 에서 렌덤 한 값 10개 뽑아내기
+
+let currentRandomPokeArr = [];
+let makeNum = 10;
+function initMakeRandomPokeSlider() {
+    // 1. 기존 슬라이더를 제거
+    if ($('#pokeSlider').hasClass('slick-initialized')) {
+        $('#pokeSlider').slick('unslick');
+    }
+
+    randomArray();
+    renderSlide();
+
+    $('#pokeSlider').slick({
+        slidesToShow: 4,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        responsive: [
+            {
+                breakpoint: 1200, // 화면 너비가 1024px 이하일 때
+                settings: {
+                    slidesToShow: 3, // 슬라이드 3개 표시
+                    slidesToScroll: 1,
+                },
+            },
+            {
+                breakpoint: 768, // 화면 너비가 768px 이하일 때
+                settings: {
+                    slidesToShow: 2, // 슬라이드 2개 표시
+                    slidesToScroll: 1,
+                },
+            },
+            {
+                breakpoint: 480, // 화면 너비가 480px 이하일 때
+                settings: {
+                    slidesToShow: 1, // 슬라이드 1개 표시
+                    slidesToScroll: 1,
+                },
+            },
+        ],
+    });
+}
+function randomArray() {
+    //0부터 maxNum 까지 사이에서 랜덤 숫자 10개 생성해서 배열에 넣기
+    currentRandomPokeArr = [];
+    let start = Number(myLocalPokeData[0].id);
+    let end = Number(myLocalPokeData[myLocalPokeData.length - 1].id);
+    console.log(start, end);
+
+    for (let i = 1; i <= makeNum; i++) {
+        let randomResult = Math.floor(Math.random() * (end - start + 1)) + start;
+        if (!currentRandomPokeArr.includes(randomResult)) {
+            currentRandomPokeArr.push(randomResult);
+        } else {
+            i--;
+        }
+    }
+    //console.log(myLocalPokeData);
+    console.log(currentRandomPokeArr);
+}
+
+// 화면에 랜더링
+function renderSlide() {
+    const eleSlideParent = document.querySelector('#pokeSlider');
+    eleSlideParent.innerHTML = '';
+    currentRandomPokeArr.forEach((item, idx) => {
+        const eleSlide = document.createElement('div');
+        const eleImg = document.createElement('img');
+        eleImg.src = myLocalPokeData.find((obj) => Number(obj.id) === item).image;
+        eleImg.alt = myLocalPokeData.find((obj) => Number(obj.id) === item).name;
+        eleSlide.appendChild(eleImg);
+        eleSlide.classList.add('slide');
+        eleSlideParent.appendChild(eleSlide);
+    });
+}
+
+window.addEventListener('resize', function () {
+    $('#pokeSlider').slick('setPosition');
+});
+
+// slick 적용
+
+// =============== 다른 세대 메뉴 클릭시
+
+// 화면 초기화
+
+// 다시 위 과정 반복
+
+// ==============  검색 누르면 slick 부분 사라짐
+
+// 검색 아무것도 없는 상태에서 검색 누르면 --> 다시 slick 현재 세대꺼 나타남
 
 // ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ 모달 닫기
 document.querySelector('#closeModal').addEventListener('click', function () {
